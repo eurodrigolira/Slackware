@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# Autor: Rodrigo Lira
+# E-mail: eurodrigolira@gmail.com
+# Blog: https://rodrigolira.eti.br
+# 10/09/2018 - Versão 1.0
+#
+# Este script inicia, para, reinicia e verifica o status do Zabbix Agent no Slackware 14.2
+#
+# DEFINIÇÃO DAS VARIÁVEIS
+#
+LOG=/var/log/zabbix/zabbix_agentd.log
+#
+# Inicia o Zabbix Agent
+start() {
+# Verifica se o arquivo de log existe, se não existir cria o mesmo
+    if [ -f $LOG ]; then
+      echo "Arquivo de log já existe!" >> $LOG
+    else
+      /usr/bin/touch $LOG
+      echo "Arquivo de log criado com sucesso." >> $LOG
+    fi
+  echo -n "Iniciando o Zabbix Server..."
+  /usr/local/sbin/zabbix_agentd >> $LOG &
+  echo
+}
+# Para o Zabbix Agent
+stop() {
+  echo -n "Parando o Zabbix Server..."
+  /usr/bin/killall -TERM zabbix_agentd >> $LOG
+  echo
+}
+# Verifica o status do Zabbix Agent
+status() {
+PID=$(/sbin/pidof zabbix_agentd)
+  if [ "$PID" == "" ]; then
+    echo "Zabbix Agent não está roando!"
+  else
+    echo "Zabbix Agent está rodando, PID $PID."
+  fi
+}
+# Reinicia o Zabbix Agent
+restart() {
+  stop
+  start
+}
+# Opções
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    stop
+    start
+    ;;
+  status)
+    status
+    ;;
+  *)
+    echo "Opções: $0 {start|stop|status|restart}"
+    ;;
+esac
+exit 0
