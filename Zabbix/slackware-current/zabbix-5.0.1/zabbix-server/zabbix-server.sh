@@ -131,7 +131,7 @@ chmod +x /etc/rc.d/rc.httpd
 /etc/rc.d/rc.httpd start
 #
 echo -e "[\e[32m+\e[0m] Copiando o rc.zabbix_server para o /etc/rc.d."
-wget $RC_FILE -O /etc/rc.d/rc.zabbix_server
+wget $RC_FILE -O /etc/rc.d/rc.zabbix_server --quiet
 chmod +x /etc/rc.d/rc.zabbix_server
 #
 echo -e "[\e[32m+\e[0m] Iniciando o Zabbix Server."
