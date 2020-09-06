@@ -23,7 +23,7 @@ echo -e "|         E-mail: eurodrigolira@gmail.com           |"
 echo -e "|         Blog: https://rodrigolira.eti.br          |"
 echo -e "+---------------------------------------------------+\e[0m"
 #
-echo -e "[\e[32m+\e[0m] Criando usuário e grupo do Zabbix."
+echo -e "[\e[32m+\e[0m] Criando usuário e grupo do Zabbix Agent."
 
 if [ "$(grep zabbixagent /etc/passwd)" = "" -o "$(grep zabbixagent /etc/group)" = "" ] ; then
 	groupadd -g 266 zabbixagent && useradd -u 266 -g zabbixagent -d /dev/null -s /bin/false zabbixagent
@@ -50,6 +50,15 @@ echo -e "[\e[32m+\e[0m] Instalando o Zabbix Agent."
   --enable-agent \
   &>> $LOG
 make install &>> $LOG
+#
+echo -e "[\e[32m+\e[0m] Criando o diretório de logs e definindo as permissões."
+if [ -d /var/log/zabbix ] ; then
+	touch /var/log/zabbix/zabbix_agentd.log
+else
+	mkdir /var/log/zabbix/
+	touch /var/log/zabbix/zabbix_agentd.log
+fi
+chown -fR zabbix:zabbix /var/log/zabbix/
 #
 echo -e "[\e[32m+\e[0m] Copiando o rc.zabbix_agentd para o /etc/rc.d."
 wget $RC_FILE -O /etc/rc.d/rc.zabbix_agentd --quiet
