@@ -18,7 +18,7 @@ DIR="/tmp"
 LOG="$DIR/zabbix-install.log"
 RC_FILE="https://raw.githubusercontent.com/eurodrigolira/Slackware/master/Zabbix/slackware-current/zabbix-$VERSION/zabbix-proxy/rc.zabbix_proxy"
 echo -e "\e[32m+---------------------------------------------------+"
-echo -e "|        INSTALAÇÃO DO ZABBIX PROXY $VERSION NO       |"
+echo -e "|        INSTALAÇÃO DO ZABBIX PROXY $VERSION NO        |"
 echo -e "|              SLACKWARE LINUX CURRENT              |"
 echo -e "|                                                   |"
 echo -e "|               DÚVIDAS E SUGESTÕES                 |"
@@ -108,7 +108,7 @@ echo -e "| DIGITE O ENDEREÇO IP DO ZABBIX SERVER  |"
 echo -e "+----------------------------------------+\e[0m"
 read ZABBIX_SERVER
 sed -i "s/LogFile=\/tmp\/zabbix_proxy\.log/LogFile=\/var\/log\/zabbix\/zabbix_proxy.log/" /etc/zabbix/zabbix_proxy.conf
-sed -i "s/DBName=zabbix/DBName=$DB_NAME/" /etc/zabbix/zabbix_proxy.conf
+sed -i "s/DBName=zabbix_proxy/DBName=$DB_NAME/" /etc/zabbix/zabbix_proxy.conf
 sed -i "s/DBUser=zabbix/DBUser=$MYSQL_USER/" /etc/zabbix/zabbix_proxy.conf
 sed -i "s/# DBPassword=/DBPassword=$PASS_MYSQL_USER/" /etc/zabbix/zabbix_proxy.conf
 sed -i "s/# DBPassword=/DBPassword=$PASS_MYSQL_USER/" /etc/zabbix/zabbix_proxy.conf
