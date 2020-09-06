@@ -12,6 +12,7 @@ VERSION="5.0.1"
 ZABBIX="https://cdn.zabbix.com/zabbix/sources/stable/5.0/zabbix-$VERSION.tar.gz"
 DIR="/tmp"
 LOG="$DIR/zabbix-install.log"
+RC_FILE="https://raw.githubusercontent.com/eurodrigolira/Slackware/master/Zabbix/slackware-current/zabbix-$VERSION/zabbix-agent/rc.zabbix_agentd"
 #
 echo -e "\e[32m+---------------------------------------------------+"
 echo -e "|        INSTALAÇÃO DO ZABBIX AGENT $VERSION NO        |"
@@ -51,7 +52,7 @@ echo -e "[\e[32m+\e[0m] Instalando o Zabbix Agent."
 make install &>> $LOG
 #
 echo -e "[\e[32m+\e[0m] Copiando o rc.zabbix_agentd para o /etc/rc.d."
-cp rc.zabbix_agentd /etc/rc.d/ 
+wget $RC_FILE -O /etc/rc.d/rc.zabbix_agentd --quiet
 chmod +x /etc/rc.d/rc.zabbix_agentd
 #
 echo -e "[\e[32m+\e[0m] Iniciando o Zabbix Agent."
