@@ -4,13 +4,13 @@
 # E-mail: eurodrigolira@gmail.com
 # Blog:	https://rodrigolira.eti.br
 #
-# Este script inicia, para, reinicia e verifica o status do Zabbix Server.
+# Este script inicia, para, reinicia e verifica o status do Zabbix Proxy.
 #
 # DEFINIÇÃO DAS VARIÁVEIS
 #
-LOG=/var/log/zabbix/zabbix_server.log
+LOG=/var/log/zabbix/zabbix_proxy.log
 #
-# Inicia o Zabbix Server
+# Inicia o Zabbix Proxy
 start() {
 # Verifica se o arquivo de log existe, se não existir cria o mesmo
     if [ -f $LOG ]; then
@@ -19,26 +19,26 @@ start() {
       /usr/bin/touch $LOG
       echo "Arquivo de log criado com sucesso." >> $LOG
     fi
-  echo -n "Iniciando o Zabbix Server..."
-  /usr/sbin/zabbix_server >> $LOG &
+  echo -n "Iniciando o Zabbix Proxy..."
+  /usr/sbin/zabbix_proxy >> $LOG &
   echo
 }
-# Para o Zabbix Server
+# Para o Zabbix Proxy
 stop() {
-  echo -n "Parando o Zabbix Server..."
-  /usr/bin/killall -TERM zabbix_server >> $LOG
+  echo -n "Parando o Zabbix Proxy..."
+  /usr/bin/killall -TERM zabbix_proxy >> $LOG
   echo
 }
-# Verifica o status do Zabbix Server
+# Verifica o status do Zabbix Proxy
 status() {
-PID=$(/sbin/pidof zabbix_server)
+PID=$(/sbin/pidof zabbix_proxy)
   if [ "$PID" == "" ]; then
-    echo "Zabbix Server não está roando!"
+    echo "Zabbix Proxy não está roando!"
   else
-    echo "Zabbix Server está rodando, PID $PID."
+    echo "Zabbix Proxy está rodando, PID $PID."
   fi
 }
-# Reinicia o Zabbix Server
+# Reinicia o Zabbix Proxy
 restart() {
   stop
   start

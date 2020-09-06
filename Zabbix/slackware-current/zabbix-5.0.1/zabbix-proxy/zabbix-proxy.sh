@@ -3,9 +3,9 @@
 # Autor: Rodrigo Lira
 # E-mail: eurodrigolira@gmail.com
 # Blog:	https://rodrigolira.eti.br
-# 15/08/2020 
 #
 # Este script instala o Zabbix Server 5 no Slackware Linux Current. 
+#
 # Use este script se o servidor for dedicado apenas para o Zabbix, não aconselho o uso do mesmo junto com outros serviços,  
 # caso esteja rodando mais algum serviço, leia o script e entenda o que ele faz e adeque de acordo com as suas necessidades.
 #
@@ -49,7 +49,7 @@ echo -e "[\e[32m+\e[0m] Instalando o Zabbix Server."
   --datadir=/etc \
   --localstatedir=/var/lib \
   --mandir=/usr/man \
-  --docdir=/usr/doc/$PRGNAM-$VERSION \
+  --docdir=/usr/doc/zabbix-$VERSION \
   --libdir=/usr/lib64 \
   --enable-server \
   --with-mysql \

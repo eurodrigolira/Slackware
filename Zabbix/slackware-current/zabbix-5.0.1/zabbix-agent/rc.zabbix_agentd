@@ -4,13 +4,13 @@
 # E-mail: eurodrigolira@gmail.com
 # Blog:	https://rodrigolira.eti.br
 #
-# Este script inicia, para, reinicia e verifica o status do Zabbix Server.
+# Este script inicia, para, reinicia e verifica o status do Zabbix Agent.
 #
 # DEFINIÇÃO DAS VARIÁVEIS
 #
-LOG=/var/log/zabbix/zabbix_server.log
+LOG=/var/log/zabbix/zabbix_agentd.log
 #
-# Inicia o Zabbix Server
+# Inicia o Zabbix Agent
 start() {
 # Verifica se o arquivo de log existe, se não existir cria o mesmo
     if [ -f $LOG ]; then
@@ -19,26 +19,26 @@ start() {
       /usr/bin/touch $LOG
       echo "Arquivo de log criado com sucesso." >> $LOG
     fi
-  echo -n "Iniciando o Zabbix Server..."
-  /usr/sbin/zabbix_server >> $LOG &
+  echo -n "Iniciando o Zabbix Agent..."
+  /usr/sbin/zabbix_agentd >> $LOG &
   echo
 }
-# Para o Zabbix Server
+# Para o Zabbix Agent
 stop() {
-  echo -n "Parando o Zabbix Server..."
-  /usr/bin/killall -TERM zabbix_server >> $LOG
+  echo -n "Parando o Zabbix Agent..."
+  /usr/bin/killall -TERM zabbix_agentd >> $LOG
   echo
 }
-# Verifica o status do Zabbix Server
+# Verifica o status do Zabbix Agent
 status() {
-PID=$(/sbin/pidof zabbix_server)
+PID=$(/sbin/pidof zabbix_agentd)
   if [ "$PID" == "" ]; then
-    echo "Zabbix Server não está roando!"
+    echo "Zabbix Agent não está roando!"
   else
-    echo "Zabbix Server está rodando, PID $PID."
+    echo "Zabbix Agent está rodando, PID $PID."
   fi
 }
-# Reinicia o Zabbix Server
+# Reinicia o Zabbix Agent
 restart() {
   stop
   start
