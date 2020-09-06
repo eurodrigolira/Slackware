@@ -28,7 +28,7 @@ echo -e "+---------------------------------------------------+\e[0m"
 #
 echo -e "[\e[32m+\e[0m] Criando usuário e grupo do Zabbix."
 
-if [ "$(grep zabbix /etc/passwd)" = "" -o "$(grep zabbix /etc/group)" = "" ] ; then
+if [ "$(grep 'zabbix:' /etc/passwd)" = "" -o "$(grep 'zabbix:' /etc/group)" = "" ] ; then
 	groupadd -g 228 zabbix && useradd -u 228 -g zabbix -d /dev/null -s /bin/false zabbix
 else
 	echo -e "[\e[32m!\e[0m] Usuário e grupo do Zabbix já existem."

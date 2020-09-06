@@ -23,12 +23,18 @@ echo -e "|         E-mail: eurodrigolira@gmail.com           |"
 echo -e "|         Blog: https://rodrigolira.eti.br          |"
 echo -e "+---------------------------------------------------+\e[0m"
 #
-echo -e "[\e[32m+\e[0m] Criando usuário e grupo do Zabbix Agent."
-
-if [ "$(grep zabbixagent /etc/passwd)" = "" -o "$(grep zabbixagent /etc/group)" = "" ] ; then
-	groupadd -g 266 zabbixagent && useradd -u 266 -g zabbixagent -d /dev/null -s /bin/false zabbixagent
+echo -e "[\e[32m+\e[0m] Criando usuário e grupo do Zabbix."
+if [ "$(grep 'zabbix:' /etc/passwd)" = "" -o "$(grep 'zabbix:' /etc/group)" = "" ] ; then
+        groupadd -g 228 zabbix && useradd -u 228 -g zabbix -d /dev/null -s /bin/false zabbix
 else
-	echo -e "[\e[32m!\e[0m] Usuário e grupo do Zabbix já existem."
+        echo -e "[\e[32m!\e[0m] Usuário e grupo do Zabbix já existem."
+fi
+#
+echo -e "[\e[32m+\e[0m] Criando usuário e grupo do Zabbix Agent."
+if [ "$(grep 'zabbixagent:' /etc/passwd)" = "" -o "$(grep 'zabbixagent:' /etc/group)" = "" ] ; then
+        groupadd -g 266 zabbixagent && useradd -u 266 -g zabbixagent -d /dev/null -s /bin/false zabbixagent
+else
+        echo -e "[\e[32m!\e[0m] Usuário e grupo do Zabbix Agent já existem."
 fi
 #
 echo -e "[\e[32m+\e[0m] Fazendo o download do Zabbix Agent $VERSION.\e[96m" 
