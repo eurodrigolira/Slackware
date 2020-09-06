@@ -17,7 +17,7 @@ ZABBIX="$URL/zabbix-$VERSION.tar.gz"
 DIR="/tmp"
 LOG="$DIR/zabbix-install.log"
 TIMEZONE="America\/Recife"
-#
+RC_FILE="https://raw.githubusercontent.com/eurodrigolira/Slackware/master/Zabbix/slackware-current/zabbix-5.0.1/zabbix-server/rc.zabbix_server"
 echo -e "\e[32m+---------------------------------------------------+"
 echo -e "|        INSTALAÇÃO DO ZABBIX SERVER $VERSION NO       |"
 echo -e "|              SLACKWARE LINUX CURRENT              |"
@@ -131,8 +131,7 @@ chmod +x /etc/rc.d/rc.httpd
 /etc/rc.d/rc.httpd start
 #
 echo -e "[\e[32m+\e[0m] Copiando o rc.zabbix_server para o /etc/rc.d."
-cd -
-cp rc.zabbix_server /etc/rc.d/ 
+wget $RC_FILE -O /etc/rc.d/
 chmod +x /etc/rc.d/rc.zabbix_server
 #
 echo -e "[\e[32m+\e[0m] Iniciando o Zabbix Server."
