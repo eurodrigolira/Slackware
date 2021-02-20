@@ -4,22 +4,21 @@
 # E-mail: eurodrigolira@gmail.com
 # Blog:	https://rodrigolira.eti.br
 #
-# Este script instala o Zabbix Server 5.2 no Slackware Linux Current. 
+# Este script instala o Zabbix Proxy 5 no Slackware Linux Current. 
 #
 # Use este script se o servidor for dedicado apenas para o Zabbix, não aconselho o uso do mesmo junto com outros serviços,  
 # caso esteja rodando mais algum serviço, leia o script e entenda o que ele faz e adeque de acordo com as suas necessidades.
 #
 # DEFINIÇÕES DAS VARIÁVEIS
 #
-VERSION="5.2.1"
-URL="https://cdn.zabbix.com/zabbix/sources/stable/5.2/"
+VERSION="5.0.8"
+URL="https://cdn.zabbix.com/zabbix/sources/stable/5.0/"
 ZABBIX="$URL/zabbix-$VERSION.tar.gz"
 DIR="/tmp"
 LOG="$DIR/zabbix-install.log"
-TIMEZONE="America\/Recife"
-RC_FILE="https://raw.githubusercontent.com/eurodrigolira/Slackware/master/Zabbix/slackware-current/zabbix-$VERSION/zabbix-server/rc.zabbix_server"
+RC_FILE="https://raw.githubusercontent.com/eurodrigolira/Slackware/master/Zabbix/slackware-current/zabbix-$VERSION/zabbix-proxy/rc.zabbix_proxy"
 echo -e "\e[32m+---------------------------------------------------+"
-echo -e "|        INSTALAÇÃO DO ZABBIX SERVER $VERSION NO       |"
+echo -e "|        INSTALAÇÃO DO ZABBIX PROXY $VERSION NO        |"
 echo -e "|              SLACKWARE LINUX CURRENT              |"
 echo -e "|                                                   |"
 echo -e "|               DÚVIDAS E SUGESTÕES                 |"
@@ -35,15 +34,15 @@ else
 	echo -e "[\e[32m!\e[0m] Usuário e grupo do Zabbix já existem."
 fi
 #
-echo -e "[\e[32m+\e[0m] Fazendo o download do Zabbix Server $VERSION.\e[96m" 
+echo -e "[\e[32m+\e[0m] Fazendo o download do Zabbix Proxy $VERSION.\e[96m" 
 cd $DIR
 wget --quiet $ZABBIX
 #
-echo -e "\e[0m[\e[32m+\e[0m] Descompactanto o Zabbix Server."
+echo -e "\e[0m[\e[32m+\e[0m] Descompactanto o Zabbix Proxy."
 tar xzf zabbix-$VERSION.tar.gz
 cd zabbix-$VERSION
 #
-echo -e "[\e[32m+\e[0m] Instalando o Zabbix Server."
+echo -e "[\e[32m+\e[0m] Instalando o Zabbix Proxy."
 ./configure \
   --prefix=/usr \
   --sysconfdir=/etc/zabbix \
@@ -52,14 +51,13 @@ echo -e "[\e[32m+\e[0m] Instalando o Zabbix Server."
   --mandir=/usr/man \
   --docdir=/usr/doc/zabbix-$VERSION \
   --libdir=/usr/lib64 \
-  --enable-server \
+  --enable-proxy \
   --with-mysql \
   --with-libcurl \
   --with-net-snmp \
   --with-ssh2 \
   --with-ldap \
   --with-ipv6 \
-  --with-libxml2 \
   &>> $LOG
 make install &>> $LOG
 #
@@ -76,15 +74,15 @@ echo -e "| DIGITE A SENHA DO USUÁRIO ROOT DO BANCO DE DADOS |"
 echo -e "+--------------------------------------------------+\e[0m"
 read PASS_ROOTDB
 echo -e "\e[33m+------------------------------------------------------+"
-echo -e "| DIGITE O NOME DO BANCO DE DADOS PARA O ZABBIX SERVER |"
+echo -e "| DIGITE O NOME DO BANCO DE DADOS PARA O ZABBIX PROXY  |"
 echo -e "+------------------------------------------------------+\e[0m"
 read DB_NAME
 echo -e "\e[33m+-------------------------------------------------------------+"
-echo -e "| DIGITE O NOME DO USUARIO DO BANCO DE DADOS DO ZABBIX SERVER |"
+echo -e "| DIGITE O NOME DO USUARIO DO BANCO DE DADOS DO ZABBIX PROXY  |"
 echo -e "+-------------------------------------------------------------+\e[0m"
 read MYSQL_USER
 echo -e "\e[33m+--------------------------------------------------------------+"
-echo -e "| DIGITE A SENHA DO USUARIO DO BANCO DE DADOS DO ZABBIX SERVER |"
+echo -e "| DIGITE A SENHA DO USUARIO DO BANCO DE DADOS DO ZABBIX PROXY  |"
 echo -e "+--------------------------------------------------------------+\e[0m"
 read PASS_MYSQL_USER
 #
@@ -94,49 +92,35 @@ mysql -u root -p$PASS_ROOTDB -e "create database $DB_NAME character set utf8 col
 mysql -u root -p$PASS_ROOTDB -e "grant all on zabbix.* to $MYSQL_USER@localhost identified by '$PASS_MYSQL_USER';"
 mysql -u root -p$PASS_ROOTDB -e "flush privileges;"
 #
-echo -e "[\e[32m+\e[0m] Configurando o banco de dados do Zabbix Server."
+echo -e "[\e[32m+\e[0m] Configurando o banco de dados do Zabbix Proxy."
 mysql -u root -p$PASS_ROOTDB $DB_NAME < database/mysql/schema.sql
-mysql -u root -p$PASS_ROOTDB $DB_NAME < database/mysql/images.sql
-mysql -u root -p$PASS_ROOTDB $DB_NAME < database/mysql/data.sql
-#
-echo -e "[\e[32m+\e[0m] Configurando o arquivo /etc/php.ini."
-sed -i "s/;date\.timezone =/date.timezone = $TIMEZONE/" /etc/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 16M/" /etc/php.ini
-sed -i "s/max_execution_time = 30/max_execution_time = 300/" /etc/php.ini
-sed -i "s/max_input_time = 60/max_input_time = 300/" /etc/php.ini
-#
-echo -e "[\e[32m+\e[0m] Configurando o HTTPd."
-sed -i "s/#ServerName www\.example\.com:80/ServerName $HOSTNAME:80/" /etc/httpd/httpd.conf
-sed -i "s/DirectoryIndex index\.html/DirectoryIndex index.php index.html/" /etc/httpd/httpd.conf
-sed -i "s/#Include \/etc\/httpd\/mod_php\.conf/Include \/etc\/httpd\/mod_php.conf/" /etc/httpd/httpd.conf
-#
-echo -e "[\e[32m+\e[0m] Copiando o frontend do Zabbix Server para o diretório /var/www/htdocs."
-rm -rf /var/www/htdocs/*
-cp -R ui/* /var/www/htdocs/
-chown -fR apache:apache /var/www/htdocs/
+#mysql -u root -p$PASS_ROOTDB $DB_NAME < database/mysql/images.sql
+#mysql -u root -p$PASS_ROOTDB $DB_NAME < database/mysql/data.sql
 #
 echo -e "[\e[32m+\e[0m] Criando o diretório de logs e definindo as permissões."
 mkdir /var/log/zabbix/
-touch /var/log/zabbix/zabbix_server.log
+touch /var/log/zabbix/zabbix_proxy.log
 chown -fR zabbix:zabbix /var/log/zabbix/
 #
-echo -e "[\e[32m+\e[0m] Configurando o arquivo zabbix_server.conf."
-sed -i "s/LogFile=\/tmp\/zabbix_server\.log/LogFile=\/var\/log\/zabbix\/zabbix_server.log/" /etc/zabbix/zabbix_server.conf
-sed -i "s/DBName=zabbix/DBName=$DB_NAME/" /etc/zabbix/zabbix_server.conf
-sed -i "s/DBUser=zabbix/DBUser=$MYSQL_USER/" /etc/zabbix/zabbix_server.conf
-sed -i "s/# DBPassword=/DBPassword=$PASS_MYSQL_USER/" /etc/zabbix/zabbix_server.conf
+echo -e "[\e[32m+\e[0m] Configurando o arquivo zabbix_proxy.conf."
+echo -e "\e[33m+----------------------------------------+"
+echo -e "| DIGITE O ENDEREÇO IP DO ZABBIX SERVER  |"
+echo -e "+----------------------------------------+\e[0m"
+read ZABBIX_SERVER
+sed -i "s/LogFile=\/tmp\/zabbix_proxy\.log/LogFile=\/var\/log\/zabbix\/zabbix_proxy.log/" /etc/zabbix/zabbix_proxy.conf
+sed -i "s/DBName=zabbix_proxy/DBName=$DB_NAME/" /etc/zabbix/zabbix_proxy.conf
+sed -i "s/DBUser=zabbix/DBUser=$MYSQL_USER/" /etc/zabbix/zabbix_proxy.conf
+sed -i "s/# DBPassword=/DBPassword=$PASS_MYSQL_USER/" /etc/zabbix/zabbix_proxy.conf
+sed -i "s/# DBPassword=/DBPassword=$PASS_MYSQL_USER/" /etc/zabbix/zabbix_proxy.conf
+sed -i "s/Server=127.0.0.1/Server=$ZABBIX_SERVER/" /etc/zabbix/zabbix_proxy.conf
 #
-echo -e "[\e[32m+\e[0m] Iniciando o HTTPd."
-chmod +x /etc/rc.d/rc.httpd
-/etc/rc.d/rc.httpd start
+echo -e "[\e[32m+\e[0m] Copiando o rc.zabbix_proxy para o /etc/rc.d."
+wget $RC_FILE -O /etc/rc.d/rc.zabbix_proxy --quiet
+chmod +x /etc/rc.d/rc.zabbix_proxy
 #
-echo -e "[\e[32m+\e[0m] Copiando o rc.zabbix_server para o /etc/rc.d."
-wget $RC_FILE -O /etc/rc.d/rc.zabbix_server --quiet
-chmod +x /etc/rc.d/rc.zabbix_server
-#
-echo -e "[\e[32m+\e[0m] Iniciando o Zabbix Server."
-/etc/rc.d/rc.zabbix_server start &>> $LOG
+echo -e "[\e[32m+\e[0m] Iniciando o Zabbix Proxy."
+/etc/rc.d/rc.zabbix_proxy start &>> $LOG
 #
 echo -e "\e[32m+--------------------------------------------------------------+"
-echo -e "|     INSTALAÇÃO DO ZABBIX SERVER REALIZADA COM SUCESSO        |"
+echo -e "|      INSTALAÇÃO DO ZABBIX PROXY REALIZADA COM SUCESSO        |"
 echo -e "+--------------------------------------------------------------+\e[0m"

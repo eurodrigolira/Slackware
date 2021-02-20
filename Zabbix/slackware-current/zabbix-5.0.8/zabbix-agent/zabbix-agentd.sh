@@ -8,7 +8,7 @@
 #
 # DEFINIÇÕES DAS VARIÁVEIS
 #
-VERSION="5.0.5"
+VERSION="5.0.8"
 ZABBIX="https://cdn.zabbix.com/zabbix/sources/stable/5.0/zabbix-$VERSION.tar.gz"
 DIR="/tmp"
 LOG="$DIR/zabbix-install.log"

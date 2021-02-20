@@ -11,7 +11,7 @@
 #
 # DEFINIÇÕES DAS VARIÁVEIS
 #
-VERSION="5.0.5"
+VERSION="5.0.8"
 URL="https://cdn.zabbix.com/zabbix/sources/stable/5.0/"
 ZABBIX="$URL/zabbix-$VERSION.tar.gz"
 DIR="/tmp"

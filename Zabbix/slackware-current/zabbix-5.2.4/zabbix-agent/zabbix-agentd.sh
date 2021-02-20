@@ -4,12 +4,12 @@
 # E-mail: eurodrigolira@gmail.com
 # Blog:	https://rodrigolira.eti.br
 #
-# Este script instala o Zabbix Agent 5 no Slackware Linux Current. 
+# Este script instala o Zabbix Agent 5.2 no Slackware Linux Current. 
 #
 # DEFINIÇÕES DAS VARIÁVEIS
 #
-VERSION="5.0.5"
-ZABBIX="https://cdn.zabbix.com/zabbix/sources/stable/5.0/zabbix-$VERSION.tar.gz"
+VERSION="5.2.4"
+ZABBIX="https://cdn.zabbix.com/zabbix/sources/stable/5.2/zabbix-$VERSION.tar.gz"
 DIR="/tmp"
 LOG="$DIR/zabbix-install.log"
 RC_FILE="https://raw.githubusercontent.com/eurodrigolira/Slackware/master/Zabbix/slackware-current/zabbix-$VERSION/zabbix-agent/rc.zabbix_agentd"
