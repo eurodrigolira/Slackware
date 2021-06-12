@@ -1,0 +1,31 @@
+#!/bin/sh
+# Start/stop/restart the tramission server:
+
+transmission_start() {
+  /usr/bin/transmission-daemon -g $HOME/.config/transmission-daemon
+}
+
+transmission_stop() {
+  killall transmission-daemon
+}
+
+transmission_restart() {
+  
+  transmission_stop
+  sleep 1
+  transmission_start
+}
+
+case "$1" in
+'start')
+  transmission_start
+  ;;
+'stop')
+  transmission_stop
+  ;;
+'restart')
+  transmission_restart
+  ;;
+*)
+  echo "usage $0 start|stop|restart"
+esac
