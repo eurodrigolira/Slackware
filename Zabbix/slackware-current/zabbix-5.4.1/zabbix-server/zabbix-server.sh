@@ -12,7 +12,7 @@
 # DEFINIÇÕES DAS VARIÁVEIS
 #
 VERSION="5.4.1"
-URL="https://cdn.zabbix.com/zabbix/sources/stable/5.2/"
+URL="https://cdn.zabbix.com/zabbix/sources/stable/5.4/"
 ZABBIX="$URL/zabbix-$VERSION.tar.gz"
 DIR="/tmp"
 LOG="$DIR/zabbix-install.log"
