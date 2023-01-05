@@ -43,7 +43,3 @@ if [ -x /etc/init.d/vmware ]; then
   /etc/init.d/vmware start
 fi
 #
-if [ -x /etc/init.d/vmware-USBArbitrator ]; then
-  /etc/init.d/vmware-USBArbitrator start
-fi
-
