@@ -1,4 +1,4 @@
-##Templates para o Slackpkg
+## Templates para o Slackpkg
 
 https://slackpkg.org/
 https://docs.slackware.com/slackware:slackpkg
